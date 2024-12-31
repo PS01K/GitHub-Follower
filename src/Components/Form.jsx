@@ -1,14 +1,24 @@
 import { useState } from "react";
+import axios from "axios";
+import { getFollowersCtx } from "../Context/FollowersContext";
 
 function Form() {
   const [username, setUsername] = useState("");
 
+  const followersCtx = getFollowersCtx();
+  console.log(followersCtx);
+  
   function onUsernameChange(e) {
     setUsername(e.target.value);
   }
 
-  function onFormSubmit(e) {
+  async function onFormSubmit(e) {
     e.preventDefault();
+    const followersList = await axios.get(
+      `https://api.github.com/users/${username}/followers?page=1`
+    );
+    console.log(followersList.data);
+    followersCtx.setFollowersList(followersList.data);
   }
 
   return (
