@@ -7,18 +7,36 @@ function Form() {
 
   const followersCtx = getFollowersCtx();
   console.log(followersCtx);
-  
+
   function onUsernameChange(e) {
     setUsername(e.target.value);
   }
 
+  async function getFollowers(pageNo) {
+    const followersList = await axios.get(
+      `https://api.github.com/users/${username}/followers?page=${pageNo}`
+    );
+    return followersList.data;
+  }
+
+  let hasMoreData = true;
+  let pageNo = 1;
+
   async function onFormSubmit(e) {
     e.preventDefault();
-    const followersList = await axios.get(
-      `https://api.github.com/users/${username}/followers?page=1`
-    );
-    console.log(followersList.data);
-    followersCtx.setFollowersList(followersList.data);
+    let followersList = [];
+    
+    while (hasMoreData) {
+      let list = await getFollowers(pageNo);
+      followersList = followersList.concat(list);
+      if (list.length < 30) {
+        hasMoreData = false;
+      }
+      pageNo++;
+    }
+
+    console.log(followersList);
+    followersCtx.setFollowersList(followersList);
   }
 
   return (
