@@ -6,9 +6,9 @@ function FollowersList() {
   
   return(
     <ul>
-      {/* {followersCtx.FollowersList.map((follower) => {
+      {followersCtx.followersList.map((follower) => {
         return <li>{follower.login}</li>
-      })} */}
+      })}
     </ul>
   );
 };
